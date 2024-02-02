@@ -5,9 +5,30 @@ provider "aws" {
 }
 # Resources Block
 resource "aws_instance" "app_server" {
-    ami = "ami-007868005aea67c54"
-    instance_type = "t2.micro"
+    ami = var.ami_id
+    instance_type = var.ec2_type
     tags = {
-       Name = "FirstInstance1"
+       Name = var.instance_name
+    }
+    user_data = base64encode(templatefile("${path.module}/templates/apache.tpl",{}))
+}
+resource "aws_security_group" "sg" {
+    name        = "sg"
+    description = "Web Security Group for HTTP"
+
+    ingress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    egress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks =["0.0.0.0/0"]
+    }
+    tags = {
+        Name = "apache-sg"
     }
 }

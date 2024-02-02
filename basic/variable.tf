@@ -8,3 +8,10 @@ variable "ec2_type" {
    type =  string
    default = "t2.micro"
 }
+variable "user_data" { 
+}
+variable "ami_id" {
+   description = "predefined ec2 type"
+   type = string
+   default = "ami-007868005aea67c54"
+}
